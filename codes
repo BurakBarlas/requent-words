@@ -1,0 +1,40 @@
+void checkWord(string test){
+    string tempVerb = "";
+    if(isEnd(test)){
+        whenStart = false;
+    }
+
+    if(whenStart && ((test[0] >= 'a' && test[0]<= 'z')||(test[0] >= 'A' && test[0]<= 'Z'))){
+        char *token = strtok( &test[0] , "\",.:'");
+//        printf("%s\n", token);
+    cout << token << endl;
+//        if(test[test.size()-1] == '.' || test[test.size()-1] == ','||test[test.size()-1] == '"'){
+//            if(test[test.size()-2] == '.' || test[test.size()-2] == ','||test[test.size()-2] == '"') {
+//                for (int i = 0; i < test.size() - 2; ++i) {
+//                    tempVerb += test[i];
+//                }
+//                test = tempVerb;
+//                cout << endl;
+//            }
+//            else{
+//                for (int i = 0; i < test.size() - 1; ++i) {
+//                    tempVerb += test[i];
+//                }
+//                test = tempVerb;
+//                cout << test << endl;
+//            }
+//        }
+//        else{
+//            cout << test << endl;
+//        }
+    }
+    if(isStart(test)){
+        whenStart = true;
+        int startPos = test.find(START_WORD) + START_WORD.length();
+        for (int i = startPos; i < test.size(); ++i) {
+            tempVerb += test[i];
+        }
+        test = tempVerb;
+        cout<< test <<endl;
+    }
+}
