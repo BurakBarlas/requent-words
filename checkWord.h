@@ -12,11 +12,6 @@ string START_WORD = "<BODY>";
 string END_WORD = "</BODY>";
 
 bool isStart(string word){
-//    if(verb.size() >=17){
-//        if(verb[12] == 'B' && verb[13] == 'O' && verb[14] == 'D' && verb[15] == 'Y' ){
-//            return true;
-//        }
-//    }
 
     if(word.find(START_WORD) != string::npos) {
         return true;
@@ -25,11 +20,6 @@ bool isStart(string word){
 }
 
 bool isEnd(string word){
-//    if(verb.size() >=18){
-//        if(verb[6] == 'B' && verb[7] == 'O' && verb[8] == 'D' && verb[9] == 'Y' ){
-//            return true;
-//        }
-//    }
 
     if(word.find(END_WORD) != string::npos) {
         return true;
