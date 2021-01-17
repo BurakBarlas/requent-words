@@ -28,17 +28,36 @@ template<typename K, typename V>
 
 class HashMap {
 private:
-    //HashMap<K, V> **arr;
+    //HashNode<K,V> **arr;
 
-    HashMap<K,V> *HMap;
+    HashNode<K,V> **HMap;
     int *indexStatusList;
 
     int capacity; // Max size
     int size;
 
-    HashMap<K,V> *dummy;
+    //HashMap<K,V> *dummy;
+    void insert(int hashIndex, HashNode<K,V> *node) {
+        //find next free space
+        while(HMap[hashIndex] != NULL && HMap[hashIndex]->key != node->key)
+        {
+            hashIndex++;
+            hashIndex %= capacity;
+        }
+        
+        //if new node to be inserted increase the current size
+        if(HMap[hashIndex] == NULL) {
+            size++;
+            HMap[hashIndex] = node;
+            node->value++;
+        }
 
-    void insert(int hashIndex, const HashMap<K,V>& node){
+        else if(HMap[hashIndex]->key == node->key){
+            HMap[hashIndex]->value++;
+        }
+    }
+
+        void insert1(int hashIndex, HashNode<K,V> node){
 
         int pCount;
         int inc;
@@ -66,22 +85,33 @@ private:
 
     }
 
-    int calculateHashValue(K word , int arraySize){
+    int calculateHashValue(K word){
 
         unsigned int hashedWord = hash<K>{}(word);
-        int address = hashedWord % arraySize;
+        int address = hashedWord % capacity;
 
         return address;
     }
 
 public:
+    HashMap(int capacity){
+        this->capacity = capacity;
+        size = 0;
+
+        HMap = new HashNode<K,V>*[capacity];
+
+        for(int i=0; i < capacity;i++){
+            HMap[i] = NULL;
+        }
+    }
     // Put
     void put(K key, V value) {
         // hashing
-        HashMap<K, V> newNode = new HashMap<K,V>(key, value);
-        int index = calculateHashValue(key, size);
+        HashNode<K, V> *newNode = new HashNode<K,V>(key, value);
+
+        int hashIndex = calculateHashValue(key);
         // Chech if index empty
-        insert(index, newNode);
+        insert(hashIndex, newNode);
     }
 
     V get(K key){
@@ -94,6 +124,23 @@ public:
         }
     }
 
+    void printStopWordsArray(){
+        for (int i = 0; i < capacity; ++i) {
+            cout << i << " ) " << HMap[i] << endl;
+        }
+    }
+
+    void display()
+    {
+        for(int i=0 ; i<capacity ; i++)
+        {
+            if(HMap[i] != NULL)
+                cout << i << "key = " << HMap[i]->key
+                <<"  value = "<< HMap[i]->value << endl;
+        }
+    }
+
+
     // Checks whether key exists in hashmap
     bool isExist(K key);
 
@@ -102,7 +149,7 @@ public:
     //void search(int &hashIndex, const HashMap<K,V>& node) const;
 
 
-    bool isItemAtEqual(int hashIndex, const HashMap<K,V>& node) const;
+    bool isItemAtEqual(int hashIndex, const HashNode<K,V>& node) const;
 
     //get
 };

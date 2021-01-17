@@ -5,32 +5,32 @@
 #ifndef REQUENT_WORDS_HASHING_H
 #define REQUENT_WORDS_HASHING_H
 
-#include "HashMap.h"
+//#include "HashMap.h"
 
-using namespace std;
+//using namespace std;
 
-template<typename K>
+//template<typename K>
 
 
-int calculateHashValue(K word , int arraySize){
-
-    unsigned int hashedWord = hash<K>{}(word);
-
-    int address = hashedWord % arraySize;
-
-    return address;
-}
-
-void openFileStopWords(){
-    string word;
-    int wordIndex;
-
-    ifstream stopWords("stopwords.txt");
-
-    while(stopWords >> word){
-        wordIndex = calculateWordsValue(word, 10000);
-    }
-    stopWords.close();
-}
+//int calculateHashValue(K word , int arraySize){
+//
+//    unsigned int hashedWord = hash<K>{}(word);
+//
+//    int address = hashedWord % arraySize;
+//
+//    return address;
+//}
+//
+//void openFileStopWords(){
+//    string word;
+//    int wordIndex;
+//
+//    ifstream stopWords("stopwords.txt");
+//
+//    while(stopWords >> word){
+//        wordIndex = calculateWordsValue(word, 10000);
+//    }
+//    stopWords.close();
+//}
 
 #endif //REQUENT_WORDS_HASHING_H

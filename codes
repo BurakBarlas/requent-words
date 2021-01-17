@@ -1,40 +1,138 @@
-void checkWord(string test){
-    string tempVerb = "";
-    if(isEnd(test)){
-        whenStart = false;
-    }
+#ifndef UNTITLED_HASHNODE_H
+#define UNTITLED_HASHNODE_H
+#include "checkWord.h"
 
-    if(whenStart && ((test[0] >= 'a' && test[0]<= 'z')||(test[0] >= 'A' && test[0]<= 'Z'))){
-        char *token = strtok( &test[0] , "\",.:'");
-//        printf("%s\n", token);
-    cout << token << endl;
-//        if(test[test.size()-1] == '.' || test[test.size()-1] == ','||test[test.size()-1] == '"'){
-//            if(test[test.size()-2] == '.' || test[test.size()-2] == ','||test[test.size()-2] == '"') {
-//                for (int i = 0; i < test.size() - 2; ++i) {
-//                    tempVerb += test[i];
-//                }
-//                test = tempVerb;
-//                cout << endl;
-//            }
-//            else{
-//                for (int i = 0; i < test.size() - 1; ++i) {
-//                    tempVerb += test[i];
-//                }
-//                test = tempVerb;
-//                cout << test << endl;
-//            }
-//        }
-//        else{
-//            cout << test << endl;
-//        }
+
+class HashNode{
+public:
+    string arrStopWords[1000];
+    string arrAllWords[10000];
+    int arrCountOfAllWords[10000];
+
+    bool isInStopWords(string word); // Returns TRUE if given word input is in stopwords array.
+    void printStopWordsArray(); // Prints hashed StopWords array.
+    void printAllWordsArray(); // Prints hashed AllWords array.
+    void printCountsOfAllWordsArray(); // Prints hashed CountsOfAllWords array.
+    void openFileStopWords(); // Opens stopwords.txt file and creating hashed array.
+    void createAllWords(string word); // Creates AllWords array.
+    void locateWordsPositionForStopWords(int tempIndex,string tempWord); // Puts stopwords to correct positions in array.
+    void locateWordsPositionForAllWords(int tempIndex,string tempWord); // Puts words to correct positions in array.
+    int calculateWordsValue(string word,int arrSize); // Calculates int values for words.
+    void initializeArrays(); // Initializer for arrays.
+    HashNode(); // Default constructor.
+};
+
+int HashNode::calculateWordsValue(string word, int arrSize) {
+    int sum = 0;
+    for (int i = 0; i < word.size(); ++i) {
+        sum += word[i];
     }
-    if(isStart(test)){
-        whenStart = true;
-        int startPos = test.find(START_WORD) + START_WORD.length();
-        for (int i = startPos; i < test.size(); ++i) {
-            tempVerb += test[i];
-        }
-        test = tempVerb;
-        cout<< test <<endl;
+    return sum % arrSize;
+}
+
+void HashNode::initializeArrays() {
+    for (int i = 0; i < 1000; ++i) {
+        arrStopWords[i] = "0";
+    }
+    for (int i = 0; i < 10000; ++i) {
+        arrAllWords[i] = "0";
+    }
+    for (int i = 0; i < 10000; ++i) {
+        arrCountOfAllWords[i] = 0;
     }
 }
+
+bool HashNode::isInStopWords(string word){
+    int tempIndex;
+    bool tempBool = false;
+    tempIndex = calculateWordsValue(word,1000);
+    while(true){
+        if(arrStopWords[tempIndex] != "0"){
+            if(arrStopWords[tempIndex] == word){
+                tempBool = true;
+                break;
+            }
+            else{
+                tempIndex += 8;
+                tempIndex = tempIndex % 1000;
+            }
+
+        }
+        else{
+            tempBool = false;
+            break;
+        }
+    }
+    return tempBool;
+}
+
+void HashNode::printStopWordsArray(){
+    for (int i = 0; i < 1000; ++i) {
+        cout << i << " ) " << arrStopWords[i] << endl;
+    }
+}
+
+void HashNode::printAllWordsArray(){
+    for (int i = 0; i < 10000; ++i) {
+        cout << i << " ) " << arrAllWords[i] << endl;
+    }
+}
+
+void HashNode::printCountsOfAllWordsArray() {
+    for (int i = 0; i < 10000; ++i) {
+        cout << i << " ) " <<arrCountOfAllWords[i] << endl;
+    }
+}
+
+void HashNode::locateWordsPositionForStopWords(int tempIndex,string tempWord){
+    while(true){
+        if(arrStopWords[tempIndex] != "0"){
+            tempIndex += 8;
+            tempIndex = tempIndex % 1000;
+        }
+        else{
+            arrStopWords[tempIndex] = tempWord;
+            break;
+        }
+    }
+}
+
+void HashNode::locateWordsPositionForAllWords(int tempIndex,string tempWord){
+    if (!isInStopWords(tempWord)){
+        while(true){
+            if(arrAllWords[tempIndex] != "0"){
+                tempIndex += 8;
+                tempIndex = tempIndex % 10000;
+            }
+            else{
+                arrAllWords[tempIndex] = tempWord;
+                break;
+            }
+        }
+    }
+}
+
+void HashNode::openFileStopWords(){
+    string tempWord;
+    int tempIndex;
+    ifstream stopWords("stopwords.txt");
+
+    while(stopWords >> tempWord){
+        if(tempWord.size()>0){
+            tempIndex = calculateWordsValue(tempWord,1000);
+            locateWordsPositionForStopWords(tempIndex,tempWord);
+        }
+    }
+    stopWords.close();
+}
+
+void HashNode::createAllWords(string word){
+    int tempIndex;
+    tempIndex = calculateWordsValue(word,10000);
+    locateWordsPositionForAllWords(tempIndex,word);
+}
+
+HashNode::HashNode() {
+    initializeArrays();
+}
+#endif //UNTITLED_HASHNODE_H
