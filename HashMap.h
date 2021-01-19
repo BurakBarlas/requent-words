@@ -8,15 +8,12 @@
 #include "FileOpener.h"
 
 template<typename K, typename V>
-
-
 class HashNode{
 public:
     V value; // kac kere kullanildigi
     K key; // string
 
     //constructor
-
     HashNode(K key, V value){
         this->value = value;
         this->key = key;
@@ -36,14 +33,10 @@ private:
 
     void insert(int hashIndex, HashNode<K,V> *node) {
         //find next free space
-        while(HMap[hashIndex] != NULL && HMap[hashIndex]->key != node->key)
-        {
+        while(HMap[hashIndex] != NULL && HMap[hashIndex]->key != node->key) {
             hashIndex++;
             hashIndex %= capacity;
         }
-
-        // size capacity check
-        // do smh if capacity fulled
 
         size++;
         HMap[hashIndex] = node;
@@ -69,7 +62,7 @@ public:
             HMap[i] = NULL;
         }
     }
-    // Put
+
     void put(K key, V value) {
         // hashing
         HashNode<K, V> *newNode = new HashNode<K,V>(key, value);
@@ -93,12 +86,6 @@ public:
         return 1;
     }
 
-    void printStopWordsArray(){
-        for (int i = 0; i < capacity; ++i) {
-            std::cout << i << " ) " << HMap[i] << std::endl;
-        }
-    }
-
     void display(){
         for(int i=0 ; i<capacity ; i++){
             if(HMap[i] != NULL)
@@ -106,7 +93,6 @@ public:
                 <<"  value = "<< HMap[i]->value << std::endl;
         }
     }
-
 
     void calculateTopTen(){
         HashNode<K,V> **topTen = new HashNode<K,V>*[10];
@@ -166,7 +152,6 @@ public:
         }
         return false;
     }
-
 
 };
 

@@ -15,15 +15,12 @@ void toLowerCase(std::string *word) {
     }
 }
 
-
 int main() {
     clock_t tStart = clock();
 
-    HashMap<std::string,int> *wordList = new HashMap<std::string,int>(50000);
-    HashMap<std::string,int> *stopWordList = new HashMap<std::string,int>(50000);
-
-
-
+    HashMap<std::string,int> *wordList = new HashMap<std::string,int>(2000000);
+    HashMap<std::string,int> *stopWordList = new HashMap<std::string,int>(1000);
+    
     std::string stopWord;
     std::ifstream stopWords("./Reuters-21578/stopwords.txt");
 
@@ -37,9 +34,8 @@ int main() {
 
     std::string word;
     std::string sgmFile;
-//    ifstream MyFile("./Reuters-21578/reut2-000.txt");
 
-    char dneme;
+
 
     for (int j = 0; j <= 21 ; ++j) {
         sgmFile = sgmStringTransporter(j);
@@ -65,14 +61,9 @@ int main() {
             }
         }
         MyFile.close();
-//        wordList->display();
     }
 
-
-
-
     wordList->calculateTopTen();
-
 
     printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
     return 0 ;

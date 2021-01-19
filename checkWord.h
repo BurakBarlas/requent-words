@@ -35,9 +35,9 @@ std::string checkWord(std::string test){
     }
 
     if(whenStart && ((test[0] >= 'a' && test[0]<= 'z')||(test[0] >= 'A' && test[0]<= 'Z'))){
-        char *token = strtok( &test[0] , "\",.]:'>()");
-//        cout << token << endl;
-//        wordNum++;
+        char* next_token1;
+        char* token = strtok_s(&test[0], "\",.]:'>()", &next_token1);
+
         return token;
 
     }
@@ -48,8 +48,6 @@ std::string checkWord(std::string test){
             tempWord += test[i];
         }
         test = tempWord;
-//        cout<< test <<endl;
-//        wordNum++;
         return  test;
 
     }
