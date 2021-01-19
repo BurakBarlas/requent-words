@@ -5,10 +5,10 @@
 #ifndef REQUENT_WORDS_HASHMAP_H
 #define REQUENT_WORDS_HASHMAP_H
 
-//#include<bits/stdc++.h>
-#include "hashing.h"
+#include "FileOpener.h"
 
 template<typename K, typename V>
+
 
 class HashNode{
 public:
@@ -28,15 +28,12 @@ template<typename K, typename V>
 
 class HashMap {
 private:
-    //HashNode<K,V> **arr;
 
     HashNode<K,V> **HMap;
-    int *indexStatusList;
 
     int capacity; // Max size
     int size;
 
-    //HashMap<K,V> *dummy;
     void insert(int hashIndex, HashNode<K,V> *node) {
         //find next free space
         while(HMap[hashIndex] != NULL && HMap[hashIndex]->key != node->key)
@@ -44,50 +41,18 @@ private:
             hashIndex++;
             hashIndex %= capacity;
         }
-        
-        //if new node to be inserted increase the current size
-        if(HMap[hashIndex] == NULL) {
-            size++;
-            HMap[hashIndex] = node;
-            node->value++;
-        }
 
-        else if(HMap[hashIndex]->key == node->key){
-            HMap[hashIndex]->value++;
-        }
+        // size capacity check
+        // do smh if capacity fulled
+
+        size++;
+        HMap[hashIndex] = node;
     }
 
-        void insert1(int hashIndex, HashNode<K,V> node){
-
-        int pCount;
-        int inc;
-
-        pCount = 0;
-        inc = 1;
-
-        while (indexStatusList[hashIndex] == 1 && HMap[hashIndex] != node && pCount < capacity / 2){
-            pCount++;
-            hashIndex = (hashIndex + inc) % capacity;
-            inc = inc + 2;
-        }
-
-        if(indexStatusList[hashIndex] != 1){
-            HMap[hashIndex] = node;
-            indexStatusList[hashIndex] = 1;
-            size++;
-        }
-
-        else if (HMap[hashIndex] == node)
-            cerr << "Error: No duplicates are allowed" << endl;
-        else
-            cerr << "Error: The table is full. "
-                 <<"Unable to resolve the collision" << endl;
-
-    }
 
     int calculateHashValue(K word){
 
-        unsigned int hashedWord = hash<K>{}(word);
+        unsigned int hashedWord = std::hash<K>{}(word);
         int address = hashedWord % capacity;
 
         return address;
@@ -114,44 +79,95 @@ public:
         insert(hashIndex, newNode);
     }
 
-    V get(K key){
+    V get(K &key){
         int hashIndex = calculateHashValue(key);
 
         while (HMap[hashIndex] != NULL) {
-            if (HMap[hashIndex] == calculateHashValue(key)) {
-                return key;
+            if (HMap[hashIndex]->key == key) {
+                return HMap[hashIndex]->value;
+            }
+            else{
+                hashIndex = (hashIndex+1) % capacity;
             }
         }
+        return 1;
     }
 
     void printStopWordsArray(){
         for (int i = 0; i < capacity; ++i) {
-            cout << i << " ) " << HMap[i] << endl;
+            std::cout << i << " ) " << HMap[i] << std::endl;
         }
     }
 
-    void display()
-    {
-        for(int i=0 ; i<capacity ; i++)
-        {
+    void display(){
+        for(int i=0 ; i<capacity ; i++){
             if(HMap[i] != NULL)
-                cout << i << "key = " << HMap[i]->key
-                <<"  value = "<< HMap[i]->value << endl;
+                std::cout << i << "key = " << HMap[i]->key
+                <<"  value = "<< HMap[i]->value << std::endl;
         }
     }
 
+
+    void calculateTopTen(){
+        HashNode<K,V> **topTen = new HashNode<K,V>*[10];
+
+        for(int i=0; i < 10;i++){
+            topTen[i] = NULL;
+        }
+
+        for(int i=0 ; i<capacity ; i++) {
+            if(HMap[i] != NULL) {
+                int minIndex=0;
+                int minValue=0;
+
+                for (int j = 0; j < 10; ++j) {
+                    if (topTen[j] != NULL) {
+                        if(minValue == 0 || topTen[j]->value < minValue) {
+                            minIndex = j;
+                            minValue = topTen[j]->value;
+                        }
+                    }
+                    else {
+                        minValue=0;
+                        minIndex=j;
+                        break;
+                    }
+                }
+                if(minValue < HMap[i]->value){
+                    topTen[minIndex] = HMap[i];
+                }
+            }
+        }
+        for(int j=0; j < 10;j++){
+            int maxIndex=0;
+            int maxValue=0;
+            for(int i=0; i < 10;i++) {
+                if(topTen[i] != NULL && topTen[i]->value > maxValue){
+                    maxIndex = i;
+                    maxValue = topTen[i]->value;
+                }
+            }
+            std::cout << topTen[maxIndex]->key << " " << topTen[maxIndex]->value <<std::endl;
+            topTen[maxIndex] = NULL;
+        }
+    }
 
     // Checks whether key exists in hashmap
-    bool isExist(K key);
+    bool isExist(K key){
+        int hashIndex = calculateHashValue(key);
 
-//    List<V> getKeys();
+        while (HMap[hashIndex] != NULL) {
+            if (HMap[hashIndex]->key == key) {
+                return true;
+            }
+            else{
+                hashIndex = (hashIndex+1) % capacity;
+            }
+        }
+        return false;
+    }
 
-    //void search(int &hashIndex, const HashMap<K,V>& node) const;
 
-
-    bool isItemAtEqual(int hashIndex, const HashNode<K,V>& node) const;
-
-    //get
 };
 
 #endif //REQUENT_WORDS_HASHMAP_H

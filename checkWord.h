@@ -5,38 +5,41 @@
 #ifndef REQUENT_WORDS_CHECKWORD_H
 #define REQUENT_WORDS_CHECKWORD_H
 
-using namespace std;
 
 bool whenStart = false;
-string START_WORD = "<BODY>";
-string END_WORD = "</BODY>";
 
-bool isStart(string word){
+std::string START_WORD = "<BODY>";
+std::string END_WORD = "</BODY>";
 
-    if(word.find(START_WORD) != string::npos) {
+bool isStart(std::string word){
+
+    if(word.find(START_WORD) != std::string::npos) {
         return true;
     }
     return false;
 }
 
-bool isEnd(string word){
+bool isEnd(std::string word){
 
-    if(word.find(END_WORD) != string::npos) {
+    if(word.find(END_WORD) != std::string::npos) {
         return true;
     }
 
     return false;
 }
 
-void checkWord(string test){
-    string tempWord = "";
+std::string checkWord(std::string test){
+    std::string tempWord;
     if(isEnd(test)){
         whenStart = false;
     }
 
     if(whenStart && ((test[0] >= 'a' && test[0]<= 'z')||(test[0] >= 'A' && test[0]<= 'Z'))){
-        char *token = strtok( &test[0] , "\",.:')");
-        cout << token << endl;
+        char *token = strtok( &test[0] , "\",.]:'>()");
+//        cout << token << endl;
+//        wordNum++;
+        return token;
+
     }
     if(isStart(test)){
         whenStart = true;
@@ -45,7 +48,13 @@ void checkWord(string test){
             tempWord += test[i];
         }
         test = tempWord;
-        cout<< test <<endl;
+//        cout<< test <<endl;
+//        wordNum++;
+        return  test;
+
+    }
+    else{
+        return "";
     }
 }
 
